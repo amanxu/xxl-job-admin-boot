@@ -12,7 +12,8 @@ import java.io.Serializable;
 @Getter
 public enum ErrorCodeEnum implements Serializable {
 
-    AUTH_ERR(100, "鉴权失败"),
+    AUTH_ERR(900100, "鉴权失败"),
+    JWT_EXPIRED_ERR(900101, "登陆超时"),
     BIZ_ERR(999999, "业务异常"),
     USER_ADD_ERR(100100, "用户创建失败"),
     USER_UPDATE_ERR(100101, "用户更新失败"),

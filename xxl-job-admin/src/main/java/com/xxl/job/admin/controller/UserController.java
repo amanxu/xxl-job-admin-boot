@@ -1,13 +1,12 @@
 package com.xxl.job.admin.controller;
 
-import com.xxl.job.admin.controller.annotation.PermessionLimit;
-import com.xxl.job.admin.core.dto.CommonMessage;
 import com.xxl.job.admin.core.dto.UserPageDto;
-import com.xxl.job.admin.core.enums.XxlJobConstant;
 import com.xxl.job.admin.core.model.XxlJobUser;
+import com.xxl.job.admin.core.vo.XxlJobUserVo;
 import com.xxl.job.admin.service.XxlJobUserService;
 import com.xxl.job.core.biz.model.ReturnT;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,7 +50,12 @@ public class UserController extends BaseController {
     public ReturnT userDetailByToken(HttpServletRequest request) {
         Integer userId = getReqUserId(request);
         XxlJobUser xxlJobUser = jobUserService.findById(userId);
-        return new ReturnT(xxlJobUser);
+        XxlJobUserVo jobUserVo = new XxlJobUserVo();
+        BeanUtils.copyProperties(xxlJobUser, jobUserVo);
+        if (xxlJobUser.getUserType() == 0) {
+            jobUserVo.setRoles(new String[]{"admin"});
+        }
+        return new ReturnT(jobUserVo);
     }
 
     @RequestMapping("/detailByName")

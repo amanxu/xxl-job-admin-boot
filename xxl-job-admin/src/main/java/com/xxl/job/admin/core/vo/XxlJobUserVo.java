@@ -26,5 +26,5 @@ public class XxlJobUserVo {
 
     private Date createTime;
 
-    private Date updateTime;
+    private String[] roles;
 }

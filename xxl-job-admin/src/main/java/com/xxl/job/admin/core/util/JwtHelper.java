@@ -19,16 +19,11 @@ import java.util.Date;
 @Slf4j
 public class JwtHelper {
 
-    public static Claims parseJwt(String jsonWebToken, String base64Secret) {
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(DatatypeConverter.parseBase64Binary(base64Secret))
-                    .parseClaimsJws(jsonWebToken).getBody();
-            return claims;
-        } catch (Exception ex) {
-            log.error("ParseJwt ERR:{}", ex);
-        }
-        return null;
+    public static Claims parseJwt(String jsonWebToken, String base64Secret) throws Exception {
+        Claims claims = Jwts.parser()
+                .setSigningKey(DatatypeConverter.parseBase64Binary(base64Secret))
+                .parseClaimsJws(jsonWebToken).getBody();
+        return claims;
     }
 
     public static String createJwt(Integer userId, String username, Integer userType, String base64Secret, long expiresSecond) {

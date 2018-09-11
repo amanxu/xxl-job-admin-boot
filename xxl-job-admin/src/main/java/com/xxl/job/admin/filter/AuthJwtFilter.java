@@ -1,14 +1,19 @@
 package com.xxl.job.admin.filter;
 
+import com.alibaba.fastjson.JSON;
 import com.xxl.job.admin.core.conf.JwtConfigProperty;
+import com.xxl.job.admin.core.enums.ErrorCodeEnum;
 import com.xxl.job.admin.core.exception.BusinessException;
 import com.xxl.job.admin.core.util.InitPermessionLimit;
 import com.xxl.job.admin.core.util.JwtHelper;
+import com.xxl.job.core.biz.model.ReturnT;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.GenericFilterBean;
@@ -31,6 +36,7 @@ public class AuthJwtFilter extends GenericFilterBean {
 
     private static String JWT_CLAIMS = "CLAIMS";
     private static String HTTP_OPTIONS = "OPTIONS";
+    private static String TOKEN_BEARER = "bearer;";
     private static final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Autowired
@@ -72,10 +78,9 @@ public class AuthJwtFilter extends GenericFilterBean {
             return;
         }
         // 正常鉴权处理
-        if (authHeader == null || !authHeader.startsWith("bearer;")) {
+        if (authHeader == null || !authHeader.startsWith(TOKEN_BEARER)) {
             response.sendRedirect(request.getContextPath() + "/");
             return;
-            /*throw new BusinessException(ErrorCodeEnum.AUTH_ERR.getCode(), ErrorCodeEnum.AUTH_ERR.getMsg());*/
         }
         final String token = authHeader.substring(7);
         try {
@@ -83,13 +88,17 @@ public class AuthJwtFilter extends GenericFilterBean {
             if (claims == null) {
                 response.sendRedirect(request.getContextPath() + "/");
                 return;
-                /*throw new BusinessException(ErrorCodeEnum.AUTH_ERR.getCode(), ErrorCodeEnum.AUTH_ERR.getMsg());*/
             }
             request.setAttribute(JWT_CLAIMS, claims);
-        } catch (final Exception e) {
-            response.sendRedirect(request.getContextPath() + "/");
+        } catch (final Exception ex) {
+            if (ex instanceof ExpiredJwtException) {
+                ReturnT filterReturn = new ReturnT(ErrorCodeEnum.JWT_EXPIRED_ERR.getCode(), ErrorCodeEnum.JWT_EXPIRED_ERR.getMsg());
+                response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+                response.getWriter().write(JSON.toJSONString(filterReturn));
+            } else {
+                log.error("AuthFilter DoFilter:{}", ex);
+            }
             return;
-            /*throw new BusinessException(ErrorCodeEnum.AUTH_ERR.getCode(), e.getMessage());*/
         }
         chain.doFilter(req, res);
     }
