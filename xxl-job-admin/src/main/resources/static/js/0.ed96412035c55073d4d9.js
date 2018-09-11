@@ -1,0 +1,2 @@
+webpackJsonp([0],{COTu:function(t,o,e){"use strict";o.b=function(t){return Object(r.a)({url:"/jobgroup/list",method:"post",data:t})},o.c=function(){return Object(r.a)({url:"/jobgroup/listAll",method:"get"})},o.a=function(t){return Object(r.a)({url:"/jobgroup/save",method:"post",data:t})},o.d=function(t){return Object(r.a)({url:"/jobgroup/remove",method:"get",params:{id:t}})},o.e=function(t){return Object(r.a)({url:"/jobgroup/update",method:"post",data:t})};var r=e("vLgD")}});
+//# sourceMappingURL=0.ed96412035c55073d4d9.js.map

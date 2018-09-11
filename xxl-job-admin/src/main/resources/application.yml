@@ -1,0 +1,73 @@
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://eureka-dev.zmlearn.com/eureka
+#    registryFetchIntervalSeconds: 5
+#  instance:
+#    prefer-ip-address: true
+#    ## 心跳间隔，5秒
+#    leaseRenewalIntervalInSeconds: 5
+#    ## 没有心跳的淘汰时间，10秒
+#    leaseExpirationDurationInSeconds: 10
+xxl:
+  job:
+    mail:
+      host: smtp.163.com
+      port: 25
+      ssl: false
+      username: ovono802302@163.com
+      password: asdfzxcv
+      sendNick: 《掌门APP任务调度平台》
+    login:
+      username: admin
+      password: 123456
+    accessToken:
+    i18n:
+spring:
+  application:
+    name: xxl-job-admin
+  datasource:
+      url: jdbc:mysql://127.0.0.1:3306/xxl-job-admin?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false
+      username: root
+      password: 111111
+#      url: jdbc:mysql://120.26.97.200:3306/app_xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&useSSL=false
+#      username: forge
+#      password: zhangmen
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+      filters: wall,stat
+      initial-size: 1
+      max-active: 3
+      min-idle: 1
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: select 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+  thymeleaf:
+    cache: true
+    mode: LEGACYHTML5
+    content-type: text/html
+    check-template-location: true
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.xxl.job.admin.core.model
+  configuration.map-underscore-to-camel-case: true
+server:
+  port: 8088
+  tomcat:
+    uri-encoding: UTF-8
+pagehelper:
+  helperDialect: mysql
+  params: count=countSql
+  reasonable: false
+  supportMethodsArguments: true
+jwt:
+  base64Secret: MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=
+  expires-time: 3600
+  static-path: /static/**
+

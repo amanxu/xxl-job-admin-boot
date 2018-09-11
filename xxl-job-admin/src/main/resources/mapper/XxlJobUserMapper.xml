@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobUserDao">
+
+    <resultMap id="XxlJobUser" type="com.xxl.job.admin.core.model.XxlJobUser">
+        <result column="id" property="id"/>
+        <result column="user_name" property="userName"/>
+        <result column="password" property="password"/>
+        <result column="real_name" property="realName"/>
+        <result column="phone" property="phone"/>
+        <result column="user_type" property="userType"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+		u.id,
+		u.user_name,
+		u.password,
+		u.real_name,
+		u.phone,
+		u.user_type,
+		u.create_time,
+		u.update_time
+	</sql>
+
+    <select id="findAll" resultMap="XxlJobUser">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM XXL_JOB_USER AS u
+        ORDER BY u.id desc
+    </select>
+
+    <select id="findPage" parameterType="java.lang.String" resultType="com.xxl.job.admin.core.vo.XxlJobUserVo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM XXL_JOB_USER AS u
+        <where>
+            <if test="userName != null and userName!=''">
+                u.user_name LIKE concat('%',#{userName},'%') OR u.real_name LIKE concat('%',#{userName},'%')
+            </if>
+        </where>
+        ORDER BY u.id DESC
+    </select>
+
+    <select id="findAuthPage" parameterType="java.lang.String" resultType="com.xxl.job.admin.core.vo.XxlJobUserAuthVo">
+        SELECT
+        u.id,
+        u.user_name,
+        u.real_name,
+        u.user_type
+        FROM XXL_JOB_USER AS u
+        <where>
+            <if test="userName != null and userName!=''">
+                u.user_name LIKE concat('%',#{userName},'%') OR u.real_name LIKE concat('%',#{userName},'%')
+            </if>
+        </where>
+        ORDER BY u.id ASC
+    </select>
+
+    <select id="findByUserName" parameterType="java.lang.String" resultMap="XxlJobUser">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM XXL_JOB_USER AS u
+        WHERE u.user_name = #{userName}
+    </select>
+
+    <insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO XXL_JOB_USER ( `user_name`, `password`, `real_name`, `phone`,`user_type`)
+		values (#{userName}, #{password}, #{realName}, #{phone},#{userType});
+	</insert>
+
+    <update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser">
+		UPDATE XXL_JOB_USER
+		SET `user_name` = #{userName},
+			`password` = #{password},
+			`real_name` = #{realName},
+			`phone` = #{phone},
+			`user_type` = #{userType}
+		WHERE id = #{id}
+	</update>
+
+    <delete id="batchDelete" parameterType="java.lang.Integer">
+        DELETE FROM XXL_JOB_USER
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="java.lang.Integer" resultMap="XxlJobUser">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM XXL_JOB_USER AS u
+        WHERE u.id = #{id}
+    </select>
+
+</mapper>

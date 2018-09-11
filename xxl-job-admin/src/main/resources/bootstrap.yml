@@ -1,0 +1,11 @@
+#spring:
+#  application:
+#    name: xxl-job-admin
+#  cloud:
+#      config:
+#        uri: http://zm-app-config.zmops.cc:8888
+#        label: ${label:master}
+#        profile: ${profile:dev}
+#        failFast: true
+#        username: user
+#        password: nXHfGyJzgtCBmE6n8ktFCQjn5GgxCmZb
