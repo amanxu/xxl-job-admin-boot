@@ -3,6 +3,7 @@ package com.xxl.job.admin.core.vo;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description:
@@ -20,11 +21,13 @@ public class XxlJobUserVo {
 
     private String phone;
 
+    private String password;
+
     private Integer userType;
 
     private String userTypeDesc;
 
     private Date createTime;
 
-    private String[] roles;
+    private List<String> roles;
 }

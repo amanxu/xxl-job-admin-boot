@@ -26,7 +26,7 @@ public interface XxlJobService {
      * @param filterTime
      * @return
      */
-    public Map<String, Object> pageList(Integer userId,int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime);
+    public Map<String, Object> pageList(Integer userId, int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime);
 
     /**
      * add job

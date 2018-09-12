@@ -1,6 +1,5 @@
 package com.xxl.job.admin.core.dto;
 
-import com.alibaba.fastjson.serializer.SerializeConfig;
 import lombok.Getter;
 import lombok.Setter;
 

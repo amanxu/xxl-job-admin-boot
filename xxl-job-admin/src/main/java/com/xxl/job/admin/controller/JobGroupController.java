@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xxl.job.admin.core.dto.GroupPageDto;
 import com.xxl.job.admin.core.enums.AddressTypeEnum;
+import com.xxl.job.admin.core.enums.ErrorCodeEnum;
+import com.xxl.job.admin.core.exception.BusinessException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.core.vo.XxlJobGroupVo;
@@ -87,6 +89,10 @@ public class JobGroupController extends BaseController {
                 }
             }
         }
+        XxlJobGroup repeatGroup = jobGroupService.fingGroupByAppName(xxlJobGroup.getAppName());
+        if (repeatGroup != null) {
+            throw new BusinessException(ErrorCodeEnum.GROUP_EXISTS_ERR.getCode(), ErrorCodeEnum.GROUP_EXISTS_ERR.getMsg());
+        }
         int ret = jobGroupService.createGroup(getReqUserId(request), xxlJobGroup);
         return (ret > 0) ? ReturnT.SUCCESS : ReturnT.FAIL;
     }
@@ -115,7 +121,10 @@ public class JobGroupController extends BaseController {
                 }
             }
         }
-
+        XxlJobGroup repeatGroup = jobGroupService.fingGroupByAppName(xxlJobGroup.getAppName());
+        if (repeatGroup != null && xxlJobGroup.getId() != repeatGroup.getId()) {
+            throw new BusinessException(ErrorCodeEnum.GROUP_EXISTS_ERR.getCode(), ErrorCodeEnum.GROUP_EXISTS_ERR.getMsg());
+        }
         int ret = xxlJobGroupDao.update(xxlJobGroup);
         return (ret > 0) ? ReturnT.SUCCESS : ReturnT.FAIL;
     }

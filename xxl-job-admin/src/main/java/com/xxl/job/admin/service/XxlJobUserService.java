@@ -2,8 +2,8 @@ package com.xxl.job.admin.service;
 
 import com.github.pagehelper.PageInfo;
 import com.xxl.job.admin.core.dto.UserPageDto;
-import com.xxl.job.admin.core.vo.XxlJobUserVo;
 import com.xxl.job.admin.core.model.XxlJobUser;
+import com.xxl.job.admin.core.vo.XxlJobUserVo;
 
 /**
  * @description:

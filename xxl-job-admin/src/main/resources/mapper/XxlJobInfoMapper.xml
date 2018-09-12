@@ -86,6 +86,52 @@
         </trim>
     </select>
 
+    <select id="pageListByUserId" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        XXL_JOB_QRTZ_TRIGGER_INFO t
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="jobGroup gt 0">
+                AND t.job_group = #{jobGroup}
+            </if>
+            <if test="jobDesc != null and jobDesc != ''">
+                AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+            </if>
+            <if test="executorHandler != null and executorHandler != ''">
+                AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+            </if>
+            <if test="userId != null">
+                AND EXISTS ( SELECT 1 FROM XXL_JOB_USER_EXECUTOR ue
+                WHERE ue.user_id = #{userId}
+                AND t.job_group = ue.executor_id)
+            </if>
+        </trim>
+        ORDER BY id DESC
+        LIMIT #{offset}, #{pagesize}
+    </select>
+
+    <select id="pageListCountByUserId" parameterType="java.util.HashMap" resultType="int">
+        SELECT count(1)
+        FROM XXL_JOB_QRTZ_TRIGGER_INFO AS t
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="jobGroup gt 0">
+                AND t.job_group = #{jobGroup}
+            </if>
+            <if test="jobDesc != null and jobDesc != ''">
+                AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+            </if>
+            <if test="executorHandler != null and executorHandler != ''">
+                AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+            </if>
+            <if test="userId != null">
+                AND EXISTS ( SELECT 1 FROM XXL_JOB_USER_EXECUTOR ue
+                WHERE ue.user_id = #{userId}
+                AND t.job_group = ue.executor_id)
+            </if>
+        </trim>
+    </select>
+
     <insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO XXL_JOB_QRTZ_TRIGGER_INFO (
         job_group,
@@ -196,6 +242,11 @@
     <select id="findJobsByGroup" parameterType="java.lang.Integer" resultType="com.xxl.job.admin.core.model.XxlJobInfo">
       SELECT ti.id,ti.job_desc FROM XXL_JOB_QRTZ_TRIGGER_INFO ti
       WHERE ti.job_group = #{groupId} ORDER BY id DESC
+    </select>
+
+    <select id="findJobByGroupAndHandler" resultType="com.xxl.job.admin.core.model.XxlJobInfo">
+        SELECT ti.id,ti.job_desc FROM XXL_JOB_QRTZ_TRIGGER_INFO ti
+        WHERE ti.job_group = #{groupId} AND ti.executor_handler=#{executorHandler}
     </select>
 
 </mapper>

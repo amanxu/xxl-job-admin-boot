@@ -6,6 +6,7 @@ import com.xxl.job.admin.core.vo.XxlJobUserVo;
 import com.xxl.job.admin.service.XxlJobUserService;
 import com.xxl.job.core.biz.model.ReturnT;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -53,7 +54,9 @@ public class UserController extends BaseController {
         XxlJobUserVo jobUserVo = new XxlJobUserVo();
         BeanUtils.copyProperties(xxlJobUser, jobUserVo);
         if (xxlJobUser.getUserType() == 0) {
-            jobUserVo.setRoles(new String[]{"admin"});
+            jobUserVo.setRoles(Lists.newArrayList("admin"));
+        } else {
+            jobUserVo.setRoles(Lists.newArrayList("normal"));
         }
         return new ReturnT(jobUserVo);
     }

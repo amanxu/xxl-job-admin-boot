@@ -80,36 +80,35 @@
         <include refid="Base_Column_List"/>
         FROM
         XXL_JOB_QRTZ_TRIGGER_LOG t
-        <where>
-            <if test="userId != null">
-                EXISTS(SELECT 1 FROM XXL_JOB_USER_EXECUTOR ue WHERE t.job_group=ue.executor_id
-                and ue.user_id = #{userId})
-            </if>
-            <if test="jobGroup != null and jobGroup != ''">
-                AND t.job_group = #{jobGroup}
-            </if>
-            <if test="jobId != null">
-                AND t.job_id = #{jobId}
-            </if>
-            <if test="triggerTimeStart != null">
-                AND t.trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
-            </if>
-            <if test="triggerTimeEnd != null">
-                AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
-            </if>
-            <if test="logStatus == 1">
-                AND t.handle_code = 200
-            </if>
-            <if test="logStatus == 2">
-                AND (
-                (t.trigger_code <![CDATA[ > ]]> 0 AND t.trigger_code!=200) ||
-                (t.handle_code <![CDATA[ > ]]> 0 AND t.handle_code!=200)
-                )
-            </if>
-            <if test="logStatus == 3">
-                AND (t.trigger_code = 200 AND t.handle_code=0)
-            </if>
-        </where>
+        WHERE 1=1
+        <if test="userId != null">
+            AND EXISTS(SELECT 1 FROM XXL_JOB_USER_EXECUTOR ue WHERE t.job_group=ue.executor_id
+            and ue.user_id = #{userId})
+        </if>
+        <if test="jobGroup != null and jobGroup != ''">
+            AND t.job_group = #{jobGroup}
+        </if>
+        <if test="jobId != null">
+            AND t.job_id = #{jobId}
+        </if>
+        <if test="triggerTimeStart != null">
+            AND t.trigger_time <![CDATA[ >= ]]> #{triggerTimeStart}
+        </if>
+        <if test="triggerTimeEnd != null">
+            AND t.trigger_time <![CDATA[ <= ]]> #{triggerTimeEnd}
+        </if>
+        <if test="logStatus == 1">
+            AND t.handle_code = 200
+        </if>
+        <if test="logStatus == 2">
+            AND (
+            (t.trigger_code <![CDATA[ > ]]> 0 AND t.trigger_code!=200) ||
+            (t.handle_code <![CDATA[ > ]]> 0 AND t.handle_code!=200)
+            )
+        </if>
+        <if test="logStatus == 3">
+            AND (t.trigger_code = 200 AND t.handle_code=0)
+        </if>
         ORDER BY id DESC
         LIMIT #{offset}, #{pagesize}
     </select>

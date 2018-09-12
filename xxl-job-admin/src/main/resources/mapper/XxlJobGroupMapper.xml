@@ -30,19 +30,18 @@
         t.address_type,
         t.address_list
         FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t
-        <where>
-            <if test="appName !=null and appName !=''">
-                t.app_name = #{appName}
-            </if>
-            <if test="title != null and title != ''">
-                t.title = #{title}
-            </if>
-            <if test="userId != null">
-                WHERE EXISTS (SELECT 1 FROM xxl_job_user_executor ue
-                WHERE t.id = ue.executor_id
-                AND ue.user_id = #{userId})
-            </if>
-        </where>
+        WHERE 1=1
+        <if test="appName !=null and appName !=''">
+            AND t.app_name = #{appName}
+        </if>
+        <if test="title != null and title != ''">
+            AND t.title = #{title}
+        </if>
+        <if test="userId != null">
+            AND EXISTS (SELECT 1 FROM XXL_JOB_USER_EXECUTOR ue
+            WHERE t.id = ue.executor_id
+            AND ue.user_id = #{userId})
+        </if>
         ORDER BY t.order ASC
     </select>
 
@@ -59,7 +58,7 @@
         FROM
         XXL_JOB_QRTZ_TRIGGER_GROUP t
         <if test="userId != null">
-            WHERE EXISTS (SELECT 1 FROM xxl_job_user_executor ue
+            WHERE EXISTS (SELECT 1 FROM XXL_JOB_USER_EXECUTOR ue
             WHERE t.id = ue.executor_id
             AND ue.user_id = #{userId})
         </if>
@@ -115,6 +114,13 @@
         <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
+    </select>
+
+    <select id="findGroupByAppName" resultType="com.xxl.job.admin.core.model.XxlJobGroup">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t
+        WHERE t.app_name = #{appName}
     </select>
 
 </mapper>

@@ -3,7 +3,6 @@ package com.xxl.job.admin.core.vo;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.List;

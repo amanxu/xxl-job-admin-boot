@@ -1,6 +1,8 @@
 package com.xxl.job.admin.service.impl;
 
+import com.xxl.job.admin.core.enums.ErrorCodeEnum;
 import com.xxl.job.admin.core.enums.ExecutorFailStrategyEnum;
+import com.xxl.job.admin.core.exception.BusinessException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
@@ -50,8 +52,8 @@ public class XxlJobServiceImpl implements XxlJobService {
     @Override
     public Map<String, Object> pageList(Integer userId, int start, int length, int jobGroup, String jobDesc, String executorHandler, String filterTime) {
         // page list
-        List<XxlJobInfo> list = xxlJobInfoDao.pageList(userId, start, length, jobGroup, jobDesc, executorHandler);
-        int list_count = xxlJobInfoDao.pageListCount(userId, start, length, jobGroup, jobDesc, executorHandler);
+        List<XxlJobInfo> list = xxlJobInfoDao.pageListByUserId(userId, start, length, jobGroup, jobDesc, executorHandler);
+        int list_count = xxlJobInfoDao.pageListCountByUserId(userId, start, length, jobGroup, jobDesc, executorHandler);
 
         // fill job info
         if (list != null && list.size() > 0) {
@@ -124,7 +126,11 @@ public class XxlJobServiceImpl implements XxlJobService {
             }
             jobInfo.setChildJobId(StringUtils.join(childJobIds, ","));
         }
-
+        // 判断同一个执行器下作业定义是否重复
+        XxlJobInfo xxlJobInfo = xxlJobInfoDao.findJobByGroupAndHandler(jobInfo.getJobGroup(), jobInfo.getExecutorHandler());
+        if (xxlJobInfo != null) {
+            throw new BusinessException(ErrorCodeEnum.GROUP_EXISTS_JOB_ERR.getCode(), ErrorCodeEnum.GROUP_EXISTS_JOB_ERR.getMsg());
+        }
         // add in db
         xxlJobInfoDao.save(jobInfo);
         if (jobInfo.getId() < 1) {
@@ -194,7 +200,11 @@ public class XxlJobServiceImpl implements XxlJobService {
             }
             jobInfo.setChildJobId(StringUtils.join(childJobIds, ","));
         }
-
+        // 判断同一个执行器下作业定义是否重复
+        XxlJobInfo xxlJobInfo = xxlJobInfoDao.findJobByGroupAndHandler(jobInfo.getJobGroup(), jobInfo.getExecutorHandler());
+        if (xxlJobInfo != null && jobInfo.getId() != xxlJobInfo.getId()) {
+            throw new BusinessException(ErrorCodeEnum.GROUP_EXISTS_JOB_ERR.getCode(), ErrorCodeEnum.GROUP_EXISTS_JOB_ERR.getMsg());
+        }
         // stage job info
         XxlJobInfo exists_jobInfo = xxlJobInfoDao.loadById(jobInfo.getId());
         if (exists_jobInfo == null) {

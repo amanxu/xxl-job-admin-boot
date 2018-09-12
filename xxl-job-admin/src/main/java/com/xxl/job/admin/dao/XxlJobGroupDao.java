@@ -31,4 +31,6 @@ public interface XxlJobGroupDao {
     XxlJobGroup load(@Param("id") int id);
 
     List<UserExecutorLink> batchGroupByUser(@Param("ids") List<Integer> ids);
+
+    XxlJobGroup findGroupByAppName(@Param("appName") String appName);
 }

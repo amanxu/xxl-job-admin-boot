@@ -22,7 +22,9 @@ public enum ErrorCodeEnum implements Serializable {
     USER_EXIST_ERR(100103, "用户已存在"),
     AUTH_ADD_USER_NULL_ERR(200100, "用户不能为空"),
     AUTH_ADD_GROUP_NULL_ERR(200101, "执行器集合不能为空"),
-    PWD_ERR(100104, "用户名或密码错误");
+    PWD_ERR(100104, "用户名或密码错误"),
+    GROUP_EXISTS_ERR(300100, "APPNAME已存在"),
+    GROUP_EXISTS_JOB_ERR(300101, "当前执行器下已存在该作业");
 
     private Integer code;
     private String msg;

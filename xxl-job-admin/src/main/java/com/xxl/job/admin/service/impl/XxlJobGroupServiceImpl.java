@@ -45,4 +45,9 @@ public class XxlJobGroupServiceImpl implements XxlJobGroupService {
         int retLink = jobUserExecutorDao.delByUserIdAndExeId(id);
         return (ret > 0 && retLink > 0) ? 1 : 0;
     }
+
+    @Override
+    public XxlJobGroup fingGroupByAppName(String appName) {
+        return xxlJobGroupDao.findGroupByAppName(appName);
+    }
 }

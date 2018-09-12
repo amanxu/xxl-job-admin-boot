@@ -12,4 +12,6 @@ public interface XxlJobGroupService {
     int createGroup(Integer userId, XxlJobGroup xxlJobGroup);
 
     int removeGroup(Integer id);
+
+    XxlJobGroup fingGroupByAppName(String appName);
 }

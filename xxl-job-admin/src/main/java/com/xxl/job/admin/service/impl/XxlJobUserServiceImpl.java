@@ -7,7 +7,6 @@ import com.xxl.job.admin.core.enums.ErrorCodeEnum;
 import com.xxl.job.admin.core.enums.UserTypeEnum;
 import com.xxl.job.admin.core.exception.BusinessException;
 import com.xxl.job.admin.core.model.XxlJobUser;
-import com.xxl.job.admin.core.model.XxlJobUserExecutor;
 import com.xxl.job.admin.core.vo.XxlJobUserVo;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.admin.service.XxlJobUserService;

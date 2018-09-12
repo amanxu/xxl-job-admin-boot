@@ -28,6 +28,20 @@ public interface XxlJobInfoDao {
                              @Param("jobDesc") String jobDesc,
                              @Param("executorHandler") String executorHandler);
 
+    public List<XxlJobInfo> pageListByUserId(@Param("userId") Integer userId,
+                                             @Param("offset") int offset,
+                                             @Param("pagesize") int pagesize,
+                                             @Param("jobGroup") int jobGroup,
+                                             @Param("jobDesc") String jobDesc,
+                                             @Param("executorHandler") String executorHandler);
+
+    public int pageListCountByUserId(@Param("userId") Integer userId,
+                                     @Param("offset") int offset,
+                                     @Param("pagesize") int pagesize,
+                                     @Param("jobGroup") int jobGroup,
+                                     @Param("jobDesc") String jobDesc,
+                                     @Param("executorHandler") String executorHandler);
+
     public int save(XxlJobInfo info);
 
     public XxlJobInfo loadById(@Param("id") int id);
@@ -45,4 +59,6 @@ public interface XxlJobInfoDao {
     public List<XxlJobInfo> batchJobsByIds(@Param("ids") Set<Integer> ids);
 
     public List<XxlJobInfo> findJobsByGroup(@Param("groupId") Integer groupId);
+
+    XxlJobInfo findJobByGroupAndHandler(@Param("groupId") Integer groupId, @Param("executorHandler") String executorHandler);
 }

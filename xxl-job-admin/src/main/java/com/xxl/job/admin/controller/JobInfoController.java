@@ -37,7 +37,7 @@ public class JobInfoController extends BaseController {
                                                  @RequestParam(required = false, defaultValue = "10") int length,
                                                  Integer jobGroup, String jobDesc, String executorHandler, String filterTime) {
         jobGroup = jobGroup == null ? 0 : jobGroup;
-        Map<String, Object> mapPage = xxlJobService.pageList(getReqUserId(request), start, length, jobGroup, jobDesc, executorHandler, filterTime);
+        Map<String, Object> mapPage = xxlJobService.pageList(getUIdExAdmin(request), start, length, jobGroup, jobDesc, executorHandler, filterTime);
         // 任务组
         List<XxlJobGroup> jobGroupList = xxlJobGroupDao.findByUserId(getUIdExAdmin(request));
         mapPage.put("groups", jobGroupList);
@@ -55,6 +55,7 @@ public class JobInfoController extends BaseController {
     @RequestMapping("/add")
     @ResponseBody
     public ReturnT<String> add(@RequestBody XxlJobInfo jobInfo) {
+
         return xxlJobService.add(jobInfo);
     }
 

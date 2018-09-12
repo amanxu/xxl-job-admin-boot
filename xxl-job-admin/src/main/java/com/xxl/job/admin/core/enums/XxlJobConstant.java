@@ -1,9 +1,5 @@
 package com.xxl.job.admin.core.enums;
 
-import com.xxl.job.admin.core.model.XxlJobUser;
-
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * @description: 静态变量
  * @author: xiaoxu.nie

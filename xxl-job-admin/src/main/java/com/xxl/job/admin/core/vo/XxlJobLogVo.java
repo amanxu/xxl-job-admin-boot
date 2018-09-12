@@ -1,6 +1,5 @@
 package com.xxl.job.admin.core.vo;
 
-import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import lombok.Getter;
 import lombok.Setter;
