@@ -56,7 +56,7 @@
                 u.user_name LIKE concat('%',#{userName},'%') OR u.real_name LIKE concat('%',#{userName},'%')
             </if>
         </where>
-        ORDER BY u.id ASC
+        ORDER BY u.id DESC
     </select>
 
     <select id="findByUserName" parameterType="java.lang.String" resultMap="XxlJobUser">
