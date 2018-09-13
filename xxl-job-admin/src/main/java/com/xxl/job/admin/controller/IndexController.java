@@ -8,6 +8,7 @@ import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.DateUtil;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.core.util.JwtHelper;
+import com.xxl.job.admin.core.util.MD5Util;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -85,7 +86,7 @@ public class IndexController extends BaseController {
         if (jobUser == null) {
             return new ReturnT(ErrorCodeEnum.USER_NOT_EXIST_ERR.getCode(), ErrorCodeEnum.USER_NOT_EXIST_ERR.getMsg());
         }
-        if (!userLoginDto.getPassword().equals(jobUser.getPassword())) {
+        if (!jobUser.getPassword().equals(MD5Util.getMD5(userLoginDto.getPassword()))) {
             return new ReturnT(ErrorCodeEnum.PWD_ERR.getCode(), ErrorCodeEnum.PWD_ERR.getMsg());
         }
         String authToken = JwtHelper.createJwt(jobUser.getId(), jobUser.getUserName(), jobUser.getUserType(),

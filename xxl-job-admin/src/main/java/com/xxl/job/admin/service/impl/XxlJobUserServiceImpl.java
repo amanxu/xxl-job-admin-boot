@@ -7,6 +7,7 @@ import com.xxl.job.admin.core.enums.ErrorCodeEnum;
 import com.xxl.job.admin.core.enums.UserTypeEnum;
 import com.xxl.job.admin.core.exception.BusinessException;
 import com.xxl.job.admin.core.model.XxlJobUser;
+import com.xxl.job.admin.core.util.MD5Util;
 import com.xxl.job.admin.core.vo.XxlJobUserVo;
 import com.xxl.job.admin.dao.XxlJobUserDao;
 import com.xxl.job.admin.service.XxlJobUserService;
@@ -37,7 +38,7 @@ public class XxlJobUserServiceImpl implements XxlJobUserService {
         if (user != null) {
             throw new BusinessException(ErrorCodeEnum.USER_EXIST_ERR.getCode(), ErrorCodeEnum.USER_EXIST_ERR.getMsg());
         }
-        jobUser.setPassword("123456");
+        jobUser.setPassword(MD5Util.getMD5(jobUser.getPassword()));
         jobUser.setCreateTime(new Date());
         int result = jobUserDao.save(jobUser);
         if (result <= 0) {
@@ -52,6 +53,11 @@ public class XxlJobUserServiceImpl implements XxlJobUserService {
         XxlJobUser user = jobUserDao.findByUserName(jobUser.getUserName());
         if (user != null && !user.getId().equals(jobUser.getId())) {
             throw new BusinessException(ErrorCodeEnum.USER_EXIST_ERR.getCode(), ErrorCodeEnum.USER_EXIST_ERR.getMsg());
+        }
+
+        if (!user.getPassword().equals(jobUser.getPassword())) {
+            String updatePwdMd5 = MD5Util.getMD5(jobUser.getPassword());
+            jobUser.setPassword(updatePwdMd5);
         }
         jobUser.setUpdateTime(new Date());
         int result = jobUserDao.update(jobUser);

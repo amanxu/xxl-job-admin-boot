@@ -234,7 +234,8 @@ CREATE TABLE XXL_JOB_USER (
 	UNIQUE KEY (`user_name`),
 	KEY `user_name_sn` (`user_name`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4;
-INSERT INTO XXL_JOB_USER (id, user_name, PASSWORD, real_name, phone, user_type, create_time, update_time) VALUES ('1', 'admin', '123456', '超级管理员', NULL, 0, '2018-08-28 15:16:28', NULL);
+INSERT INTO XXL_JOB_USER (id, user_name, PASSWORD, real_name, phone, user_type, create_time, update_time) VALUES ('1', 'admin', 'E10ADC3949BA59ABBE56E057F20F883E', '超级管理员', NULL, 0, '2018-08-28 15:16:28', NULL);
+INSERT INTO XXL_JOB_USER (id, user_name, PASSWORD, real_name, phone, user_type, create_time, update_time) VALUES ('1', 'normal', 'E10ADC3949BA59ABBE56E057F20F883E', '普通用户', NULL, 1, '2018-08-28 15:16:28', NULL);
 
 DROP TABLE IF EXISTS XXL_JOB_USER_EXECUTOR;
 CREATE TABLE XXL_JOB_USER_EXECUTOR (

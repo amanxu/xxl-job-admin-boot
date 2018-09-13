@@ -72,14 +72,27 @@
 	</insert>
 
     <update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser">
-		UPDATE XXL_JOB_USER
-		SET `user_name` = #{userName},
-			`password` = #{password},
-			`real_name` = #{realName},
-			`phone` = #{phone},
-			`user_type` = #{userType}
-		WHERE id = #{id}
-	</update>
+        UPDATE XXL_JOB_USER SET
+        <if test="userName !=null and userName != ''">
+            `user_name` = #{userName},
+        </if>
+        <if test="realName != null and realName != ''">
+            `real_name` = #{realName},
+        </if>
+        <if test="password != null and password != ''">
+            `password` = #{password},
+        </if>
+        <if test="phone != null and phone != ''">
+            `phone` = #{phone},
+        </if>
+        <if test="userType != null">
+            `user_type` = #{userType},
+        </if>
+        <if test="updateTime != null">
+            `update_time` = #{updateTime}
+        </if>
+        WHERE id = #{id}
+    </update>
 
     <delete id="batchDelete" parameterType="java.lang.Integer">
         DELETE FROM XXL_JOB_USER
