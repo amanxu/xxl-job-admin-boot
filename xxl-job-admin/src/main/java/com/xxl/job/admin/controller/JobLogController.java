@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.core.enums.ErrorCodeEnum;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.schedule.XxlJobDynamicScheduler;
@@ -13,11 +14,11 @@ import com.xxl.job.core.biz.model.LogResult;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -92,21 +93,12 @@ public class JobLogController extends BaseController {
     }
 
     @RequestMapping("/logDetailPage")
-    public String logDetailPage(int id, Model model) {
+    @ResponseBody
+    public ReturnT logDetailPage(@Param("id") int id) {
 
         // base check
-        ReturnT<String> logStatue = ReturnT.SUCCESS;
         XxlJobLog jobLog = xxlJobLogDao.load(id);
-        if (jobLog == null) {
-            throw new RuntimeException(I18nUtil.getString("joblog_logid_unvalid"));
-        }
-
-        model.addAttribute("triggerCode", jobLog.getTriggerCode());
-        model.addAttribute("handleCode", jobLog.getHandleCode());
-        model.addAttribute("executorAddress", jobLog.getExecutorAddress());
-        model.addAttribute("triggerTime", jobLog.getTriggerTime().getTime());
-        model.addAttribute("logId", jobLog.getId());
-        return "joblog/joblog.detail";
+        return new ReturnT(jobLog);
     }
 
     @RequestMapping("/logDetailCat")
@@ -133,7 +125,7 @@ public class JobLogController extends BaseController {
 
     @RequestMapping("/logKill")
     @ResponseBody
-    public ReturnT<String> logKill(int id) {
+    public ReturnT<String> logKill(@Param("id") int id) {
         // base check
         XxlJobLog log = xxlJobLogDao.load(id);
         XxlJobInfo jobInfo = xxlJobInfoDao.loadById(log.getJobId());
@@ -151,7 +143,7 @@ public class JobLogController extends BaseController {
             runResult = executorBiz.kill(jobInfo.getId());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            runResult = new ReturnT<String>(500, e.getMessage());
+            runResult = new ReturnT(ErrorCodeEnum.GROUP_STOP_FAIL_ERR.getCode(), ErrorCodeEnum.GROUP_STOP_FAIL_ERR.getMsg());
         }
 
         if (ReturnT.SUCCESS_CODE == runResult.getCode()) {
