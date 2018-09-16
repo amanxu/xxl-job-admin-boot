@@ -78,18 +78,17 @@ public class XxlJobUserAuthServiceImpl implements XxlJobUserAuthService {
         if (userAuthSaveDto.getUserId() == null) {
             throw new BusinessException(ErrorCodeEnum.AUTH_ADD_USER_NULL_ERR.getCode(), ErrorCodeEnum.AUTH_ADD_USER_NULL_ERR.getMsg());
         }
-        if (CollectionUtils.isEmpty(userAuthSaveDto.getGroupIds())) {
-            throw new BusinessException(ErrorCodeEnum.AUTH_ADD_GROUP_NULL_ERR.getCode(), ErrorCodeEnum.AUTH_ADD_GROUP_NULL_ERR.getMsg());
-        }
         // 1. 批量删除原有的用户权限
         jobUserExecutorDao.delByUserId(userAuthSaveDto.getUserId());
-        List<XxlJobUserExecutor> userExecutors = userAuthSaveDto.getGroupIds().stream().map(g -> {
-            XxlJobUserExecutor userExecutor = new XxlJobUserExecutor();
-            userExecutor.setUserId(userAuthSaveDto.getUserId());
-            userExecutor.setExecutorId(g);
-            return userExecutor;
-        }).collect(Collectors.toList());
-        // 2. 批量插入当前的用户权限
-        jobUserExecutorDao.batchInsertLink(userExecutors);
+        if (!CollectionUtils.isEmpty(userAuthSaveDto.getGroupIds())) {
+            List<XxlJobUserExecutor> userExecutors = userAuthSaveDto.getGroupIds().stream().map(g -> {
+                XxlJobUserExecutor userExecutor = new XxlJobUserExecutor();
+                userExecutor.setUserId(userAuthSaveDto.getUserId());
+                userExecutor.setExecutorId(g);
+                return userExecutor;
+            }).collect(Collectors.toList());
+            // 2. 批量插入当前的用户权限
+            jobUserExecutorDao.batchInsertLink(userExecutors);
+        }
     }
 }
