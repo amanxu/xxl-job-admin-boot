@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxl.job.admin.dao.XxlJobUserApiLogDao">
+
+    <resultMap id="XxlJobUser" type="com.xxl.job.admin.core.model.XxlJobUserApiLog">
+        <result column="id" property="id"/>
+        <result column="user_ip" property="userIp"/>
+        <result column="api_params" property="apiParams"/>
+        <result column="post_body" property="postBody"/>
+        <result column="api_path" property="apiPath"/>
+        <result column="action_desc" property="actionDesc"/>
+        <result column="login_account" property="loginAccount"/>
+        <result column="api_result" property="apiResult"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+		u.id,
+		u.user_ip,
+		u.api_params,
+		u.post_body,
+		u.api_path,
+		u.action_desc,
+		u.login_account,
+		u.api_result,
+		u.create_time
+	</sql>
+
+    <insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUserApiLog" useGeneratedKeys="true"
+            keyProperty="id">
+		INSERT INTO XXL_JOB_USER_API_LOG ( `user_ip`, `api_params`, `post_body`,`api_path`, `action_desc`,`login_account`,`api_result`,`create_time`)
+		values (#{userIp},#{apiParams}, #{postBody},#{apiPath}, #{actionDesc}, #{loginAccount},#{apiResult},#{createTime});
+	</insert>
+
+</mapper>

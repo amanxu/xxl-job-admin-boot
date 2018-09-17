@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.xxl.job.admin.core.conf.JwtConfigProperty;
 import com.xxl.job.admin.core.enums.ErrorCodeEnum;
 import com.xxl.job.admin.core.exception.BusinessException;
+import com.xxl.job.admin.core.model.XxlJobUserApiLog;
 import com.xxl.job.admin.core.util.InitPermessionLimit;
 import com.xxl.job.admin.core.util.JwtHelper;
+import com.xxl.job.admin.service.XxlJobUserApiLogService;
 import com.xxl.job.core.biz.model.ReturnT;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,7 +26,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
 
 /**
  * @description:
@@ -41,6 +46,9 @@ public class AuthJwtFilter extends GenericFilterBean {
 
     @Autowired
     private JwtConfigProperty jwtConfigProperty;
+
+    @Autowired
+    private XxlJobUserApiLogService xxlJobUserApiLogService;
 
     /**
      * JWT 参数说明
@@ -90,6 +98,8 @@ public class AuthJwtFilter extends GenericFilterBean {
                 return;
             }
             request.setAttribute(JWT_CLAIMS, claims);
+            // 记录API日志
+            recordApiLog(request, claims);
         } catch (final Exception ex) {
             if (ex instanceof ExpiredJwtException) {
                 ReturnT filterReturn = new ReturnT(ErrorCodeEnum.JWT_EXPIRED_ERR.getCode(), ErrorCodeEnum.JWT_EXPIRED_ERR.getMsg());
@@ -128,5 +138,45 @@ public class AuthJwtFilter extends GenericFilterBean {
             jwtConfigProperty = (JwtConfigProperty) factory.getBean("jwtConfigProperty");
         }
         return jwtConfigProperty;
+    }
+
+    private XxlJobUserApiLogService getUserApiLogService(HttpServletRequest request) {
+        if (xxlJobUserApiLogService == null) {
+            BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+            xxlJobUserApiLogService = (XxlJobUserApiLogService) factory.getBean("xxlJobUserApiLogService");
+        }
+        return xxlJobUserApiLogService;
+    }
+
+    private void recordApiLog(HttpServletRequest request, Claims claims) {
+        new Thread(() -> {
+            try {
+                XxlJobUserApiLog jobUserApiLog = new XxlJobUserApiLog();
+                jobUserApiLog.setApiPath(request.getRequestURI());
+                jobUserApiLog.setUserIp(request.getRemoteAddr());
+                jobUserApiLog.setLoginAccount((String) claims.get("username"));
+                jobUserApiLog.setCreateTime(new Date());
+                jobUserApiLog.setApiParams(JSON.toJSONString(request.getParameterMap()));
+                /*jobUserApiLog.setPostBody(readInputStream(request.getInputStream()));*/
+                getUserApiLogService(request).save(jobUserApiLog);
+            } catch (Exception e) {
+                log.error("RecordApiLog:", e);
+            }
+        }).start();
+    }
+
+    public String readInputStream(InputStream inStream) throws Exception {
+        if (inStream == null) {
+            return null;
+        }
+        ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int len;
+        while ((len = inStream.read(buffer)) != -1) {
+            outSteam.write(buffer, 0, len);
+        }
+        outSteam.close();
+        inStream.close();
+        return new String(outSteam.toByteArray(), "UTF-8");
     }
 }
