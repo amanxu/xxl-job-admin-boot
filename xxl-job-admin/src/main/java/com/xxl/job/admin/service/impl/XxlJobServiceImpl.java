@@ -127,10 +127,10 @@ public class XxlJobServiceImpl implements XxlJobService {
             jobInfo.setChildJobId(StringUtils.join(childJobIds, ","));
         }
         // 判断同一个执行器下作业定义是否重复
-        XxlJobInfo xxlJobInfo = xxlJobInfoDao.findJobByGroupAndHandler(jobInfo.getJobGroup(), jobInfo.getExecutorHandler());
+        /*XxlJobInfo xxlJobInfo = xxlJobInfoDao.findJobByGroupAndHandler(jobInfo.getJobGroup(), jobInfo.getExecutorHandler());
         if (xxlJobInfo != null) {
             throw new BusinessException(ErrorCodeEnum.GROUP_EXISTS_JOB_ERR.getCode(), ErrorCodeEnum.GROUP_EXISTS_JOB_ERR.getMsg());
-        }
+        }*/
         // add in db
         xxlJobInfoDao.save(jobInfo);
         if (jobInfo.getId() < 1) {
