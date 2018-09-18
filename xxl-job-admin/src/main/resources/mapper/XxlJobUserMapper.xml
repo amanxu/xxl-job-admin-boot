@@ -38,7 +38,7 @@
         FROM XXL_JOB_USER AS u
         <where>
             <if test="userName != null and userName!=''">
-                u.user_name LIKE concat('%',#{userName},'%') OR u.real_name LIKE concat('%',#{userName},'%')
+                u.user_name LIKE CONCAT('%',#{userName},'%') OR u.real_name LIKE CONCAT('%',#{userName},'%')
             </if>
         </where>
         ORDER BY u.id DESC
@@ -53,7 +53,7 @@
         FROM XXL_JOB_USER AS u
         <where>
             <if test="userName != null and userName!=''">
-                u.user_name LIKE concat('%',#{userName},'%') OR u.real_name LIKE concat('%',#{userName},'%')
+                u.user_name LIKE CONCAT('%',#{userName},'%') OR u.real_name LIKE CONCAT('%',#{userName},'%')
             </if>
         </where>
         ORDER BY u.id DESC

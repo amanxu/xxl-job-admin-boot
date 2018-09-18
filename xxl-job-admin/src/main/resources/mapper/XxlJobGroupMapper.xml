@@ -32,10 +32,10 @@
         FROM XXL_JOB_QRTZ_TRIGGER_GROUP AS t
         WHERE 1=1
         <if test="appName !=null and appName !=''">
-            AND t.app_name = #{appName}
+            AND t.app_name LIKE CONCAT('%' ,#{appName}, '%')
         </if>
         <if test="title != null and title != ''">
-            AND t.title = #{title}
+            AND t.title LIKE CONCAT('%', #{title}, '%')
         </if>
         <if test="userId != null">
             AND EXISTS (SELECT 1 FROM XXL_JOB_USER_EXECUTOR ue

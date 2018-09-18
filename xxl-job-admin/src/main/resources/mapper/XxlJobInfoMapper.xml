@@ -96,10 +96,10 @@
                 AND t.job_group = #{jobGroup}
             </if>
             <if test="jobDesc != null and jobDesc != ''">
-                AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+                AND t.job_desc like CONCAT('%', #{jobDesc}, '%')
             </if>
             <if test="executorHandler != null and executorHandler != ''">
-                AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+                AND t.executor_handler like CONCAT('%', #{executorHandler}, '%')
             </if>
             <if test="userId != null">
                 AND EXISTS ( SELECT 1 FROM XXL_JOB_USER_EXECUTOR ue
@@ -119,10 +119,10 @@
                 AND t.job_group = #{jobGroup}
             </if>
             <if test="jobDesc != null and jobDesc != ''">
-                AND t.job_desc like CONCAT(CONCAT('%', #{jobDesc}), '%')
+                AND t.job_desc like CONCAT('%', #{jobDesc}, '%')
             </if>
             <if test="executorHandler != null and executorHandler != ''">
-                AND t.executor_handler like CONCAT(CONCAT('%', #{executorHandler}), '%')
+                AND t.executor_handler like CONCAT('%', #{executorHandler}, '%')
             </if>
             <if test="userId != null">
                 AND EXISTS ( SELECT 1 FROM XXL_JOB_USER_EXECUTOR ue
