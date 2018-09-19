@@ -159,18 +159,22 @@ public class JobLogController extends BaseController {
 
     @RequestMapping("/clearLog")
     @ResponseBody
-    public ReturnT<String> clearLog(int jobGroup, int jobId, int type) {
+    public ReturnT<String> clearLog(Integer jobGroup, Integer jobId, Integer logStatus, Integer type) {
 
         Date clearBeforeTime = null;
         int clearBeforeNum = 0;
+        // 清理一个月之前日志数据
         if (type == 1) {
-            clearBeforeTime = DateUtils.addMonths(new Date(), -1);    // 清理一个月之前日志数据
+            clearBeforeTime = DateUtils.addMonths(new Date(), -1);
         } else if (type == 2) {
-            clearBeforeTime = DateUtils.addMonths(new Date(), -3);    // 清理三个月之前日志数据
+            // 清理三个月之前日志数据
+            clearBeforeTime = DateUtils.addMonths(new Date(), -3);
         } else if (type == 3) {
-            clearBeforeTime = DateUtils.addMonths(new Date(), -6);    // 清理六个月之前日志数据
+            // 清理六个月之前日志数据
+            clearBeforeTime = DateUtils.addMonths(new Date(), -6);
         } else if (type == 4) {
-            clearBeforeTime = DateUtils.addYears(new Date(), -1);    // 清理一年之前日志数据
+            // 清理一年之前日志数据
+            clearBeforeTime = DateUtils.addYears(new Date(), -1);
         } else if (type == 5) {
             clearBeforeNum = 1000;        // 清理一千条以前日志数据
         } else if (type == 6) {
@@ -185,7 +189,7 @@ public class JobLogController extends BaseController {
             return new ReturnT<String>(ReturnT.FAIL_CODE, I18nUtil.getString("joblog_clean_type_unvalid"));
         }
 
-        xxlJobLogDao.clearLog(jobGroup, jobId, clearBeforeTime, clearBeforeNum);
+        xxlJobLogDao.clearLog(jobGroup, jobId, logStatus, clearBeforeTime, clearBeforeNum);
         return ReturnT.SUCCESS;
     }
 

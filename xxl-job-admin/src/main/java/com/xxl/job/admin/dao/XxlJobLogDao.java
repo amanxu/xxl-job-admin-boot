@@ -70,9 +70,10 @@ public interface XxlJobLogDao {
                                                               @Param("from") Date from,
                                                               @Param("to") Date to);
 
-    public int clearLog(@Param("jobGroup") int jobGroup,
-                        @Param("jobId") int jobId,
+    public int clearLog(@Param("jobGroup") Integer jobGroup,
+                        @Param("jobId") Integer jobId,
+                        @Param("logStatus") Integer logStatus,
                         @Param("clearBeforeTime") Date clearBeforeTime,
-                        @Param("clearBeforeNum") int clearBeforeNum);
+                        @Param("clearBeforeNum") Integer clearBeforeNum);
 
 }
