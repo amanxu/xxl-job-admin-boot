@@ -281,24 +281,36 @@
     <delete id="clearLog">
         delete from XXL_JOB_QRTZ_TRIGGER_LOG
         <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="jobGroup gt 0">
+            <if test="jobGroup !=null and jobGroup gt 0">
                 AND job_group = #{jobGroup}
             </if>
-            <if test="jobId gt 0">
+            <if test="jobId !=null and jobId gt 0">
                 AND job_id = #{jobId}
+            </if>
+            <if test="logStatus != null and logStatus == 1">
+                AND handle_code = 200
+            </if>
+            <if test="logStatus != null and logStatus == 2">
+                AND (
+                (trigger_code <![CDATA[ > ]]> 0 AND trigger_code!=200) ||
+                (handle_code <![CDATA[ > ]]> 0 AND handle_code!=200)
+                )
+            </if>
+            <if test="logStatus != null and logStatus == 3">
+                AND (trigger_code = 200 AND handle_code=0)
             </if>
             <if test="clearBeforeTime != null">
                 AND trigger_time <![CDATA[ <= ]]> #{clearBeforeTime}
             </if>
-            <if test="clearBeforeNum gt 0">
+            <if test="clearBeforeNum!=null and clearBeforeNum gt 0">
                 AND id NOT in(
                 SELECT id FROM(
                 SELECT id FROM XXL_JOB_QRTZ_TRIGGER_LOG AS t
                 <trim prefix="WHERE" prefixOverrides="AND | OR">
-                    <if test="jobGroup gt 0">
+                    <if test="jobGroup!=null and jobGroup gt 0">
                         AND t.job_group = #{jobGroup}
                     </if>
-                    <if test="jobId gt 0">
+                    <if test="jobId!=null and jobId gt 0">
                         AND t.job_id = #{jobId}
                     </if>
                 </trim>
